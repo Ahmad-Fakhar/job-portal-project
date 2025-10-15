@@ -1,6 +1,12 @@
 import os
 from pathlib import Path
 from decouple import config
+import dj_database_url
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from a local .env file if present
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -56,13 +62,37 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'job_portal.wsgi.application'
 
-# Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Expose Supabase config for optional SDK/Auth/Storage use in backend
+SUPABASE_URL = os.getenv('SUPABASE_URL', '')
+SUPABASE_KEY = os.getenv('SUPABASE_KEY', '')
+
+# Database (configured to use Supabase Postgres via env vars)
+# You can set DATABASE_URL or the individual POSTGRES_* variables.
+DATABASE_URL = os.getenv('DATABASE_URL', config('DATABASE_URL', default=''))
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB', config('POSTGRES_DB', default='postgres')),
+            'USER': os.getenv('POSTGRES_USER', config('POSTGRES_USER', default='postgres')),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', config('POSTGRES_PASSWORD', default='')),
+            'HOST': os.getenv('POSTGRES_HOST', config('POSTGRES_HOST', default='db.pkrzxlevdcbiptggrxfv.supabase.co')),
+            'PORT': os.getenv('POSTGRES_PORT', config('POSTGRES_PORT', default='5432')),
+            'CONN_MAX_AGE': 600,
+            'OPTIONS': {
+                'sslmode': 'require',
+            },
+        }
+    }
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'

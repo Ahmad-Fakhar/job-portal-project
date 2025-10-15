@@ -3,9 +3,21 @@ SECRET_KEY=your-secret-key-here
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 
-# Database (SQLite - default)
-# For PostgreSQL, uncomment and configure:
-# DATABASE_URL=postgresql://user:password@localhost:5432/jobportal
+# Database
+# Option A (recommended for Supabase): single DATABASE_URL with SSL required
+# Example (paste from Supabase project settings → Connection string → URI):
+# DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DB_NAME?sslmode=require
+
+# Option B: Individual Postgres variables (SSL required by default)
+# POSTGRES_DB=postgres
+# POSTGRES_USER=postgres
+# POSTGRES_PASSWORD=your-password
+# POSTGRES_HOST=db.pkrzxlevdcbiptggrxfv.supabase.co
+# POSTGRES_PORT=5432
+
+# Supabase SDK (optional; only if you use Supabase services in Django)
+# SUPABASE_URL=https://pkrzxlevdcbiptggrxfv.supabase.co
+# SUPABASE_KEY=your-anon-or-service-role-key
 
 # Email Configuration
 EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
