@@ -1,0 +1,55 @@
+<!-- templates/accounts/profile.html -->
+{% extends 'base.html' %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">My Profile</h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Edit Profile</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        {{ form.as_p }}
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <img src="{% if profile.user.profile_image %}{{ profile.user.profile_image.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                         alt="Profile" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                    <h5>{{ profile.full_name }}</h5>
+                    <p class="text-muted">{{ profile.email }}</p>
+                </div>
+            </div>
+
+            {% if profile.resume %}
+            <div class="card mt-3 shadow">
+                <div class="card-body">
+                    <h6>Current Resume</h6>
+                    <a href="{{ profile.resume.url }}" target="_blank" class="btn btn-sm btn-primary">
+                        <i class="fas fa-download"></i> Download Resume
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

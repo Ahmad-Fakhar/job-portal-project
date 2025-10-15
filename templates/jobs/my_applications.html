@@ -1,0 +1,51 @@
+<!-- templates/jobs/my_applications.html -->
+{% extends 'base.html' %}
+
+{% block title %}My Applications{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">My Applications</h2>
+
+    {% if applications %}
+        <div class="row">
+            {% for application in applications %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ application.job.title }}</h5>
+                        <p class="text-muted">{{ application.job.company.company_name }}</p>
+                        
+                        <div class="mb-2">
+                            <small><i class="fas fa-map-marker-alt"></i> {{ application.job.city }}</small> |
+                            <small><i class="fas fa-briefcase"></i> {{ application.job.get_job_type_display }}</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <span class="badge 
+                                {% if application.status == 'submitted' %}bg-info
+                                {% elif application.status == 'under_review' %}bg-warning
+                                {% elif application.status == 'shortlisted' %}bg-primary
+                                {% elif application.status == 'accepted' %}bg-success
+                                {% else %}bg-danger{% endif %}">
+                                {{ application.get_status_display }}
+                            </span>
+                        </div>
+
+                        <p><small class="text-muted">Applied: {{ application.applied_date|date:"M d, Y" }}</small></p>
+                        <p><small class="text-muted">Updated: {{ application.updated_date|date:"M d, Y" }}</small></p>
+
+                        <a href="{% url 'job_detail' application.job.pk %}" class="btn btn-sm btn-primary">View Job</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> You haven't applied to any jobs yet.
+            <a href="{% url 'job_list' %}" class="alert-link">Browse Jobs</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

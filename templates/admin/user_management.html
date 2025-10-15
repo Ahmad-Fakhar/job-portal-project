@@ -1,0 +1,100 @@
+<!-- templates/admin/user_management.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Management - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-md-block bg-light sidebar">
+            {% include 'partials/sidebar_admin.html' %}
+        </nav>
+
+        <main class="col-md-10 ms-sm-auto px-md-4">
+            <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">User Management</h1>
+            </div>
+
+            <!-- User Stats -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <h6>Total Job Seekers</h6>
+                            <h2>{{ total_jobseekers }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-success">
+                        <div class="card-body">
+                            <h6>Active Today</h6>
+                            <h2>{{ active_today }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-info">
+                        <div class="card-body">
+                            <h6>New This Week</h6>
+                            <h2>{{ new_this_week }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">Job Seekers</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>City</th>
+                                    <th>Applications</th>
+                                    <th>Joined Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for seeker in jobseekers %}
+                                <tr>
+                                    <td>{{ seeker.full_name }}</td>
+                                    <td>{{ seeker.email }}</td>
+                                    <td>{{ seeker.city }}</td>
+                                    <td>
+                                        <span class="badge bg-primary">
+                                            {{ seeker.user.applications.count }}
+                                        </span>
+                                    </td>
+                                    <td>{{ seeker.user.date_joined|date:"M d, Y" }}</td>
+                                    <td>
+                                        {% if seeker.user.is_active %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-info">View Profile</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="7" class="text-center">No job seekers found</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

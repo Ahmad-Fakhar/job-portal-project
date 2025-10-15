@@ -1,0 +1,52 @@
+<!-- templates/jobs/saved_jobs.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Saved Jobs{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="fas fa-heart text-danger"></i> Saved Jobs</h2>
+
+    {% if saved_jobs %}
+        <div class="row">
+            {% for saved in saved_jobs %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title">{{ saved.job.title }}</h5>
+                            <button class="btn btn-sm btn-danger" onclick="saveJob({{ saved.job.pk }})">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                        
+                        <p class="text-muted">{{ saved.job.company.company_name }}</p>
+                        
+                        <div class="mb-2">
+                            <small><i class="fas fa-map-marker-alt"></i> {{ saved.job.city }}</small> |
+                            <small><i class="fas fa-briefcase"></i> {{ saved.job.get_job_type_display }}</small>
+                        </div>
+
+                        <p class="card-text">{{ saved.job.description|truncatewords:20 }}</p>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Saved: {{ saved.saved_date|date:"M d, Y" }}</small>
+                            <div>
+                                <a href="{% url 'job_detail' saved.job.pk %}" class="btn btn-sm btn-primary">View Job</a>
+                                <a href="{% url 'apply_job' saved.job.pk %}" class="btn btn-sm btn-success">Apply</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> You haven't saved any jobs yet.
+            <a href="{% url 'job_list' %}" class="alert-link">Browse Jobs</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

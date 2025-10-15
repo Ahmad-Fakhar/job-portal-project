@@ -1,0 +1,102 @@
+<!-- templates/company/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Company Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-md-block bg-light sidebar">
+            {% include 'partials/sidebar_company.html' %}
+        </nav>
+
+        <main class="col-md-10 ms-sm-auto px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Company Dashboard</h1>
+            </div>
+
+            <!-- Status Alert -->
+            {% if company.status == 'pending' %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-clock"></i> Your company registration is pending admin approval. You'll be able to post jobs once approved.
+                </div>
+            {% elif company.status == 'rejected' %}
+                <div class="alert alert-danger">
+                    <i class="fas fa-times-circle"></i> Your company registration was rejected. Reason: {{ company.rejection_reason }}
+                </div>
+            {% endif %}
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <h5>Total Jobs</h5>
+                            <h2>{{ total_jobs }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-success">
+                        <div class="card-body">
+                            <h5>Active Jobs</h5>
+                            <h2>{{ active_jobs }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body">
+                            <h5>Applications</h5>
+                            <h2>{{ total_applications }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-info">
+                        <div class="card-body">
+                            <h5>Views</h5>
+                            <h2>{{ total_views }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Applications -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recent Applications</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Applicant</th>
+                                <th>Job Title</th>
+                                <th>Applied Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for application in recent_applications %}
+                            <tr>
+                                <td>{{ application.applicant.username }}</td>
+                                <td>{{ application.job.title }}</td>
+                                <td>{{ application.applied_date|date:"M d, Y" }}</td>
+                                <td><span class="badge bg-info">{{ application.get_status_display }}</span></td>
+                                <td>
+                                    <a href="{% url 'application_detail' application.pk %}" class="btn btn-sm btn-primary">View</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="text-center">No applications yet</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

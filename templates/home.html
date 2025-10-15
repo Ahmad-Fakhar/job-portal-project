@@ -1,0 +1,192 @@
+<!-- ==================== HOMEPAGE TEMPLATE ==================== -->
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Job Portal{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-4">Find Your Dream Security Job</h1>
+                <p class="lead">Connect with top employers and discover exciting career opportunities</p>
+                
+                <!-- Search Form -->
+                <form method="GET" action="{% url 'job_list' %}" class="mt-4">
+                    <div class="row g-2">
+                        <div class="col-md-5">
+                            <input type="text" name="keyword" class="form-control form-control-lg" placeholder="Job title, keywords...">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="location" class="form-control form-control-lg" placeholder="Location">
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-success btn-lg w-100">
+                                <i class="fas fa-search"></i> Search Jobs
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <img src="{% static 'images/hero-image.jpg' %}" alt="Job Search" class="img-fluid rounded">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-briefcase fa-3x text-primary mb-3"></i>
+                        <h3>1000+</h3>
+                        <p>Active Jobs</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-building fa-3x text-success mb-3"></i>
+                        <h3>500+</h3>
+                        <p>Companies</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-users fa-3x text-warning mb-3"></i>
+                        <h3>5000+</h3>
+                        <p>Job Seekers</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-check-circle fa-3x text-info mb-3"></i>
+                        <h3>2000+</h3>
+                        <p>Jobs Filled</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Jobs -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Featured Jobs</h2>
+        <div class="row">
+            {% for job in featured_jobs %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                {% if job.company.company_logo %}
+                                    <img src="{{ job.company.company_logo.url }}" alt="{{ job.company.company_name }}" class="img-fluid" style="max-width: 60px;">
+                                {% else %}
+                                    <div class="bg-primary text-white rounded p-3">
+                                        <i class="fas fa-building fa-2x"></i>
+                                    </div>
+                                {% endif %}
+                                <span class="badge bg-success">{{ job.job_type }}</span>
+                            </div>
+                            
+                            <h5 class="card-title">{{ job.title }}</h5>
+                            <p class="text-muted">
+                                <i class="fas fa-building"></i> {{ job.company.company_name }}
+                            </p>
+                            <p class="text-muted">
+                                <i class="fas fa-map-marker-alt"></i> {{ job.city }}
+                            </p>
+                            
+                            {% if job.salary_min and job.salary_max %}
+                                <p class="text-success fw-bold">
+                                    <i class="fas fa-dollar-sign"></i> ${{ job.salary_min }} - ${{ job.salary_max }}
+                                </p>
+                            {% endif %}
+                            
+                            <p class="card-text">{{ job.description|truncatewords:20 }}</p>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="far fa-clock"></i> {{ job.posted_date|timesince }} ago
+                                </small>
+                                <a href="{% url 'job_detail' job.pk %}" class="btn btn-primary btn-sm">
+                                    View Details <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        No featured jobs available at the moment.
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'job_list' %}" class="btn btn-lg btn-primary">
+                Browse All Jobs <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                    <i class="fas fa-user-plus fa-3x"></i>
+                </div>
+                <h4>1. Create Account</h4>
+                <p>Sign up for free and create your profile</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                    <i class="fas fa-search fa-3x"></i>
+                </div>
+                <h4>2. Search Jobs</h4>
+                <p>Browse through thousands of job opportunities</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="rounded-circle bg-warning text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                    <i class="fas fa-paper-plane fa-3x"></i>
+                </div>
+                <h4>3. Apply</h4>
+                <p>Submit your application with just one click</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Get Started?</h2>
+        <p class="lead mb-4">Join thousands of job seekers and find your dream job today!</p>
+        <a href="{% url 'jobseeker_register' %}" class="btn btn-light btn-lg me-3">
+            Register as Job Seeker
+        </a>
+        <a href="{% url 'company_register' %}" class="btn btn-outline-light btn-lg">
+            Register as Employer
+        </a>
+    </div>
+</section>
+{% endblock %}
